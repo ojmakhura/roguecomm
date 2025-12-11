@@ -1,0 +1,69 @@
+server:
+  port: ${PORT:8285}
+  servlet:
+    context-path: ${CONTEXT_PATH:/}
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
+    min-response-size: 1KB
+  http2:
+    enabled: true
+spring:
+  thymeleaf:
+    cache: false
+  mvc:
+    format:
+      date: iso
+      date-time: iso
+      time: HH:mm:ss
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672} 
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+  mail:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT:587}
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+app:
+  rabbitmq:
+    # Email queues
+    emailHandler: ${EMAIL_HANDLER:q.email-handler}
+    emailDispatchExchange: ${EMAIL_DISPATCH_EXCHANGE:x.email-dispatch}
+    emailDispatchQueue: ${EMAIL_DISPATCH_QUEUE:q.email-dispatch}
+    emailDispatchRoutingKey: ${EMAIL_DISPATCH_ROUTING_KEY:email-dispatch}
+    emailQueueExchange: ${EMAIL_QUEUE_EXCHANGE:x.email-queue}
+    emailQueue: ${EMAIL_QUEUE:q.email-queue}
+    emailQueueRoutingKey: ${EMAIL_QUEUE_ROUTING_KEY:email-queue}
+    # SMS queues
+    smsHandler: ${SMS_HANDLER:q.sms-handler}
+    smsDispatchExchange: ${SMS_DISPATCH_EXCHANGE:x.sms-dispatch}
+    smsDispatchQueue: ${SMS_DISPATCH_QUEUE:q.sms-dispatch}
+    smsDispatchRoutingKey: ${SMS_DISPATCH_ROUTING_KEY:sms-dispatch}
+    smsQueueExchange: ${SMS_QUEUE_EXCHANGE:x.sms-queue}
+    smsQueue: ${SMS_QUEUE:q.sms-queue}
+    smsQueueRoutingKey: ${SMS_QUEUE_ROUTING_KEY:sms-queue}
+    # WhatsApp queues
+    whatsappHandler: ${WHATSAPP_HANDLER:q.whatsapp-handler}
+    whatsappDispatchExchange: ${WHATSAPP_DISPATCH_EXCHANGE:x.whatsapp-dispatch}
+    whatsappDispatchQueue: ${WHATSAPP_DISPATCH_QUEUE:q.whatsapp-dispatch}
+    whatsappDispatchRoutingKey: ${WHATSAPP_DISPATCH_ROUTING_KEY:whatsapp-dispatch}
+    whatsappQueueExchange: ${WHATSAPP_QUEUE_EXCHANGE:x.whatsapp-queue}
+    whatsappQueue: ${WHATSAPP_QUEUE:q.whatsapp-queue}
+    whatsappQueueRoutingKey: ${WHATSAPP_QUEUE_ROUTING_KEY:whatsapp-queue}
+  whatsapp:
+    # Configure multiple WhatsApp numbers via a single environment variable
+    # Format: PHONE|API_URL|API_KEY|API_TOKEN|WEBHOOK|ENABLED|RETRIES|TIMEOUT;PHONE2|...
+    # Example: export WHATSAPP_CONFIG_STRING="+267111|https://api.wa.com|key1|token1|webhook1|true|3|30;+267222|https://api.wa.com|key2|token2|webhook2|true|3|30"
+    # Minimum required: just phone number, others will use defaults
+    configString: ${WHATSAPP_CONFIG_STRING:}
