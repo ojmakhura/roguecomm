@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
     <groupId>bw.co.roguesystems.comm</groupId>
-    <artifactId>rogue-comm</artifactId>
+    <artifactId>roguecomm</artifactId>
     <packaging>pom</packaging>
     <version>0.0.1</version>
     <name>Rogue Communication Module</name>
@@ -28,7 +28,7 @@
     </scm>
     <organization>
         <name></name>
-        <url></url>
+        <url></url> 
     </organization>
     <licenses>
         <license>
@@ -139,11 +139,11 @@
                 <artifactId>commons-io</artifactId>
                 <version>2.17.0</version>
             </dependency>
-            <dependency>
+            <!-- <dependency>
               <groupId>org.apache.commons</groupId>
               <artifactId>commons-lang3</artifactId>
               <version>3.8.1</version>
-            </dependency>
+            </dependency> -->
             <dependency>
               <groupId>org.apache.commons</groupId>
               <artifactId>commons-text</artifactId>
@@ -223,7 +223,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>2.18.1</version>
+                <version>3.0-rc5</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
@@ -422,7 +422,7 @@
             org.hibernate.dialect.PostgreSQLDialect
         </hibernate.dialect>
         <tomcat.home>${env.CATALINA_HOME}</tomcat.home>
-        <application.id>rogue-comm</application.id>
+        <application.id>roguecomm</application.id>
         <application.package>bw.co.roguesystems.comm</application.package>
         <application.name>Rogue Communication Module</application.name>
         <application.version>0.0.1</application.version>
@@ -448,6 +448,7 @@
         <!-- SCM user ID and Password here, or in user specific settings.xml file>
         <username></username>
         <password></password -->
+        <java.version>21</java.version>
     </properties>
     <profiles>
         <!--Profile configuration for local builds, activeByDefault, customize for your project -->
@@ -486,21 +487,21 @@
                 </jdbc.driver>
                 <!--
                     Change connection url for appropriate database
-                    For H2 use: jdbc:h2:~/rogue-comm
-                    For MySQL use: jdbc:mysql://localhost:3306/rogue-comm
-                    For Hypersonic use: jdbc:hsqldb:hsql://127.0.0.1/rogue-comm or jdbc:hsqldb:file:<path>/rogue-comm;shutdown=true
+                    For H2 use: jdbc:h2:~/roguecomm
+                    For MySQL use: jdbc:mysql://localhost:3306/roguecomm
+                    For Hypersonic use: jdbc:hsqldb:hsql://127.0.0.1/roguecomm or jdbc:hsqldb:file:<path>/roguecomm;shutdown=true
                     For Oracle9i use: jdbc:oracle:thin:@localhost:1521:yoursid
-                    For DB2 use: jdbc:db2:rogue-comm
-                    For Informix use: jdbc:informix-sqli://localhost:1557/rogue-comm:INFORMIXSERVER=myserver
-                    For MSSQL use: jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=rogue-comm
-                    For Pointbase use: jdbc:pointbase:server://@pointbase.server@:@pointbase.port/pointbase.rogue-comm@,new
-                    For Postgres use: jdbc:postgresql://localhost/rogue-comm
-                    For Sybase use: jdbc:sybase:Tds:localhost:5000/rogue-comm?JCONNECT_VERSION=6
-                    For SapDB use: jdbc:sapdb://127.0.0.1/rogue-comm
-                    For Progress use: jdbc:JdbcProgress:T:localhost:3305:rogue-comm
+                    For DB2 use: jdbc:db2:roguecomm
+                    For Informix use: jdbc:informix-sqli://localhost:1557/roguecomm:INFORMIXSERVER=myserver
+                    For MSSQL use: jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=roguecomm
+                    For Pointbase use: jdbc:pointbase:server://@pointbase.server@:@pointbase.port/pointbase.roguecomm@,new
+                    For Postgres use: jdbc:postgresql://localhost/roguecomm
+                    For Sybase use: jdbc:sybase:Tds:localhost:5000/roguecomm?JCONNECT_VERSION=6
+                    For SapDB use: jdbc:sapdb://127.0.0.1/roguecomm
+                    For Progress use: jdbc:JdbcProgress:T:localhost:3305:roguecomm
                 -->
                 <jdbc.url>
-                    ${DATABASE_URL:jdbc:postgresql://localhost/rogue-comm}
+                    ${DATABASE_URL:jdbc:postgresql://localhost/roguecomm}
                 </jdbc.url>
                 <!-- Enter id/password for the database connection -->
                 <jdbc.username>
@@ -572,18 +573,18 @@
                 <repository>
                     <id>andromda-repository</id>
                     <name>AndroMDA Repository</name>
-                    <url>file:/scratch/hudson/workspace/Andromda/rogue-comm/</url>
+                    <url>file:/scratch/hudson/workspace/Andromda/roguecomm/</url>
                     <uniqueVersion>false</uniqueVersion>
                 </repository>
                 <snapshotRepository>
                     <id>andromda-snapshots</id>
                     <name>AndroMDA Snapshot Repository</name>
-                    <url>file:/scratch/hudson/workspace/Andromda/rogue-comm/</url>
+                    <url>file:/scratch/hudson/workspace/Andromda/roguecomm/</url>
                     <uniqueVersion>false</uniqueVersion>
                 </snapshotRepository>
                 <site>
                     <id>website</id>
-                    <url>file:/scratch/hudson/workspace/Andromda/site/rogue-comm/</url>
+                    <url>file:/scratch/hudson/workspace/Andromda/site/roguecomm/</url>
                 </site>
             </distributionManagement-->
         </profile>

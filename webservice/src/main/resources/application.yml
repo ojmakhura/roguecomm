@@ -35,6 +35,11 @@ spring:
           starttls:
             enable: true
     protocol: smtp
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${AUTH_URL:http://localhost:8970}/realms/${REALM:comm}
 app:
   rabbitmq:
     # Email queues
@@ -61,9 +66,10 @@ app:
     whatsappQueueExchange: ${WHATSAPP_QUEUE_EXCHANGE:x.whatsapp-queue}
     whatsappQueue: ${WHATSAPP_QUEUE:q.whatsapp-queue}
     whatsappQueueRoutingKey: ${WHATSAPP_QUEUE_ROUTING_KEY:whatsapp-queue}
-  whatsapp:
-    # Configure multiple WhatsApp numbers via a single environment variable
-    # Format: PHONE|API_URL|API_KEY|API_TOKEN|WEBHOOK|ENABLED|RETRIES|TIMEOUT;PHONE2|...
-    # Example: export WHATSAPP_CONFIG_STRING="+267111|https://api.wa.com|key1|token1|webhook1|true|3|30;+267222|https://api.wa.com|key2|token2|webhook2|true|3|30"
-    # Minimum required: just phone number, others will use defaults
+  whatsapp: 
     configString: ${WHATSAPP_CONFIG_STRING:}
+  security:
+    permit: ${SECURITY_PERMIT:/**}
+logging:
+  level:
+    org.springframework.amqp: DEBUG

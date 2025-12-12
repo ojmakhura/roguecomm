@@ -4,11 +4,11 @@ import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { switchMap } from 'rxjs';
 import { tapResponse } from '@ngrx/operators';
-import { AppState } from '@store/app-state';
-import { SearchObject } from '@models/search-object';
-import { Page } from '@models/page.model';
-import { SessionDTO } from '@models/bw/co/roguesystems/comm/session/session-dto';
-import { SessionApi } from '@services/bw/co/roguesystems/comm/session/session-api';
+import { AppState } from '@app/store/app-state';
+import { SearchObject } from '@app/models/search-object';
+import { Page } from '@app/models/page.model';
+import { SessionDTO } from '@app/models/bw/co/roguesystems/comm/session/session-dto';
+import { SessionApi } from '@app/services/bw/co/roguesystems/comm/session/session-api';
 
 export type SessionApiState = AppState<any, any> & {};
 
@@ -17,11 +17,11 @@ const initialState: SessionApiState = {
   dataList: [],
   dataPage: new Page<any>(),
   searchCriteria: new SearchObject<any>(),
-  error: null,
   loading: false,
   success: false,
   messages: [],
-  loaderMessage: ''
+  loaderMessage: '',
+  error: false
 };
 
 export const SessionApiStore = signalStore(
@@ -38,25 +38,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.findById(data.id, ).pipe(
             tapResponse({
-              next: (data: SessionDTO | any) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: SessionDTO | any) => {
+                patchState(
+                  store, 
+                  {
+                    data: response,
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -69,25 +70,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.findByReference(data.reference, ).pipe(
             tapResponse({
-              next: (data: SessionDTO | any) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: SessionDTO | any) => {
+                patchState(
+                  store, 
+                  {
+                    data: response,
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -100,25 +102,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.getAll().pipe(
             tapResponse({
-              next: (data: SessionDTO[] | any[]) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: SessionDTO[] | any[]) => {
+                patchState(
+                  store, 
+                  {
+                    dataList: response, 
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -131,25 +134,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.getAllPaged(data.pageNumber, data.pageSize, ).pipe(
             tapResponse({
-              next: (data: Page<SessionDTO> | any) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: Page<SessionDTO> | any) => {
+                patchState(
+                  store, 
+                  {
+                    dataPage: response,
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -162,25 +166,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.getBySurvey(data.surveyId, ).pipe(
             tapResponse({
-              next: (data: SessionDTO[] | any[]) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: SessionDTO[] | any[]) => {
+                patchState(
+                  store, 
+                  {
+                    dataList: response, 
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -193,25 +198,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.getBySurveyPaged(data.surveyId, data.pageNumber, data.pageSize, ).pipe(
             tapResponse({
-              next: (data: Page<SessionDTO> | any) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: Page<SessionDTO> | any) => {
+                patchState(
+                  store, 
+                  {
+                    dataPage: response,
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -224,25 +230,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.getBySurveyReference(data.surveyReference, ).pipe(
             tapResponse({
-              next: (data: SessionDTO[] | any[]) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: SessionDTO[] | any[]) => {
+                patchState(
+                  store, 
+                  {
+                    dataList: response, 
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -255,25 +262,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.getBySurveyReferencePaged(data.surveyReference, data.pageNumber, data.pageSize, ).pipe(
             tapResponse({
-              next: (data: Page<SessionDTO> | any) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: Page<SessionDTO> | any) => {
+                patchState(
+                  store, 
+                  {
+                    dataPage: response,
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -286,25 +294,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.next(data.reference, ).pipe(
             tapResponse({
-              next: (data: SessionDTO | any) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: SessionDTO | any) => {
+                patchState(
+                  store, 
+                  {
+                    data: response,
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -317,25 +326,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.remove(data.id, ).pipe(
             tapResponse({
-              next: (data: boolean | any) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: boolean | any) => {
+                patchState(
+                  store, 
+                  {
+                    data: response,
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -348,25 +358,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.save(data.session, ).pipe(
             tapResponse({
-              next: (data: SessionDTO | any) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: SessionDTO | any) => {
+                patchState(
+                  store, 
+                  {
+                    data: response,
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },
@@ -379,25 +390,26 @@ export const SessionApiStore = signalStore(
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
           return sessionApi.search(data.criteria, ).pipe(
             tapResponse({
-              next: (data: SessionDTO[] | any[]) => {
-                //patchState(
-                  //store, 
-                  // { 
-                  //    data, 
-                  //    loading: false, 
-                  //    error: false,
-                  //    success: true, 
-                  //    messages: [] 
-                  //}
-                //);
+              next: (response: SessionDTO[] | any[]) => {
+                patchState(
+                  store, 
+                  {
+                    dataList: response, 
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
               },
               error: (error: any) => {
                 patchState(
                   store, { 
-                    error, 
+                    status: (error?.status || 0), 
                     loading: false, 
                     success: false,
-                    messages: [error?.error ? error.error : error] 
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
                   }
                 );
               },

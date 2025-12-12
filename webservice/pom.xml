@@ -4,15 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>bw.co.roguesystems.comm</groupId>
-        <artifactId>rogue-comm</artifactId>
+        <artifactId>roguecomm</artifactId>
         <version>0.0.1</version>
     </parent>
-    <artifactId>rogue-comm-webservice</artifactId>
+    <artifactId>roguecomm-webservice</artifactId>
     <name>Rogue Communication Module Web Services</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>rogue-comm-core</artifactId>
+            <artifactId>roguecomm-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -35,6 +35,14 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>

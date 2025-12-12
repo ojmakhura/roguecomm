@@ -9,12 +9,12 @@
     </parent> -->
     <parent>
         <groupId>bw.co.roguesystems.comm</groupId>
-        <artifactId>rogue-comm</artifactId>
+        <artifactId>roguecomm</artifactId>
         <version>0.0.1</version>
     </parent>
 
     <groupId>bw.co.roguesystems.comm</groupId>
-    <artifactId>rogue-comm-angular</artifactId>
+    <artifactId>roguecomm-angular</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
 
@@ -35,27 +35,27 @@
                 </executions>
                 <configuration>
                     <target>
-                        <copy todir="${project.basedir}/target/rogue-comm/src" overwrite="true" failonerror="false">
+                        <copy todir="${project.basedir}/target/roguecomm/src" overwrite="true" failonerror="false">
                             <fileset dir="${project.basedir}/target/src">
                                 <include name="**/*"/>
                             </fileset>
                         </copy>
-                        <copy todir="${project.basedir}/target/rogue-comm/src" overwrite="true" failonerror="false">
+                        <copy todir="${project.basedir}/target/roguecomm/src" overwrite="true" failonerror="false">
                             <fileset dir="${project.basedir}/src">
                                 <include name="**/*"/>
                             </fileset>
                         </copy>
-                        <copy todir="${project.basedir}/target/rogue-comm/public" overwrite="true" failonerror="false">
+                        <copy todir="${project.basedir}/target/roguecomm/public" overwrite="true" failonerror="false">
                             <fileset dir="${project.basedir}/public">
                                 <include name="**/*"/>
                             </fileset>
                         </copy>
-                        <copy todir="${project.basedir}/target/rogue-comm/.husky" overwrite="true" failonerror="false">
+                        <copy todir="${project.basedir}/target/roguecomm/.husky" overwrite="true" failonerror="false">
                             <fileset dir="${project.basedir}/.husky">
                                 <include name="**/*"/>
                             </fileset>
                         </copy>
-                        <copy todir="${project.basedir}/target/rogue-comm" overwrite="true" failonerror="false">
+                        <copy todir="${project.basedir}/target/roguecomm" overwrite="true" failonerror="false">
                             <fileset dir="${project.basedir}">
                                 <include name=".browserslistrc"/>
                                 <include name=".editorconfig"/>

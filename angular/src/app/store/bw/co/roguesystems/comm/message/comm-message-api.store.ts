@@ -7,12 +7,12 @@ import { tapResponse } from '@ngrx/operators';
 import { AppState } from '@app/store/app-state';
 import { SearchObject } from '@app/models/search-object';
 import { Page } from '@app/models/page.model';
-import { SurveyResponseDTO } from '@app/models/bw/co/roguesystems/comm/survey/response/survey-response-dto';
-import { SurveyResponseApi } from '@app/services/bw/co/roguesystems/comm/survey/response/survey-response-api';
+import { CommMessageDTO } from '@app/models/bw/co/roguesystems/comm/message/comm-message-dto';
+import { CommMessageApi } from '@app/services/bw/co/roguesystems/comm/message/comm-message-api';
 
-export type SurveyResponseApiState = AppState<any, any> & {};
+export type CommMessageApiState = AppState<any, any> & {};
 
-const initialState: SurveyResponseApiState = {
+const initialState: CommMessageApiState = {
   data: null,
   dataList: [],
   dataPage: new Page<any>(),
@@ -24,11 +24,11 @@ const initialState: SurveyResponseApiState = {
   error: false
 };
 
-export const SurveyResponseApiStore = signalStore(
+export const CommMessageApiStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withMethods((store: any) => {
-    const surveyResponseApi = inject(SurveyResponseApi);
+    const commMessageApi = inject(CommMessageApi);
     return {
       reset: () => {
         patchState(store, initialState);
@@ -36,9 +36,9 @@ export const SurveyResponseApiStore = signalStore(
       findById: rxMethod<{id: string | any }>(
         switchMap((data: any) => {
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.findById(data.id, ).pipe(
+          return commMessageApi.findById(data.id, ).pipe(
             tapResponse({
-              next: (response: SurveyResponseDTO | any) => {
+              next: (response: CommMessageDTO | any) => {
                 patchState(
                   store, 
                   {
@@ -68,9 +68,9 @@ export const SurveyResponseApiStore = signalStore(
       getAll: rxMethod<void>(
         switchMap(() => {
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.getAll().pipe(
+          return commMessageApi.getAll().pipe(
             tapResponse({
-              next: (response: SurveyResponseDTO[] | any[]) => {
+              next: (response: CommMessageDTO[] | any[]) => {
                 patchState(
                   store, 
                   {
@@ -100,137 +100,9 @@ export const SurveyResponseApiStore = signalStore(
       getAllPaged: rxMethod<{pageNumber: number | any , pageSize: number | any }>(
         switchMap((data: any) => {
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.getAllPaged(data.pageNumber, data.pageSize, ).pipe(
+          return commMessageApi.getAllPaged(data.pageNumber, data.pageSize, ).pipe(
             tapResponse({
-              next: (response: Page<SurveyResponseDTO> | any) => {
-                patchState(
-                  store, 
-                  {
-                    dataPage: response,
-                    loading: false, 
-                    success: true, 
-                    messages: ['Success!!'],
-                    error: false,
-                  }
-                );
-              },
-              error: (error: any) => {
-                patchState(
-                  store, { 
-                    status: (error?.status || 0), 
-                    loading: false, 
-                    success: false,
-                    error: true,
-                    messages: [error.message || 'An error occurred'], 
-                  }
-                );
-              },
-            }),
-          );
-        }),
-      ),
-      getBySession: rxMethod<{sessionId: string | any }>(
-        switchMap((data: any) => {
-          patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.getBySession(data.sessionId, ).pipe(
-            tapResponse({
-              next: (response: SurveyResponseDTO[] | any[]) => {
-                patchState(
-                  store, 
-                  {
-                    dataList: response, 
-                    loading: false, 
-                    success: true, 
-                    messages: ['Success!!'],
-                    error: false,
-                  }
-                );
-              },
-              error: (error: any) => {
-                patchState(
-                  store, { 
-                    status: (error?.status || 0), 
-                    loading: false, 
-                    success: false,
-                    error: true,
-                    messages: [error.message || 'An error occurred'], 
-                  }
-                );
-              },
-            }),
-          );
-        }),
-      ),
-      getBySessionPaged: rxMethod<{sessionId: string | any , pageNumber: number | any , pageSize: number | any }>(
-        switchMap((data: any) => {
-          patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.getBySessionPaged(data.sessionId, data.pageNumber, data.pageSize, ).pipe(
-            tapResponse({
-              next: (response: Page<SurveyResponseDTO> | any) => {
-                patchState(
-                  store, 
-                  {
-                    dataPage: response,
-                    loading: false, 
-                    success: true, 
-                    messages: ['Success!!'],
-                    error: false,
-                  }
-                );
-              },
-              error: (error: any) => {
-                patchState(
-                  store, { 
-                    status: (error?.status || 0), 
-                    loading: false, 
-                    success: false,
-                    error: true,
-                    messages: [error.message || 'An error occurred'], 
-                  }
-                );
-              },
-            }),
-          );
-        }),
-      ),
-      getBySessionReference: rxMethod<{sessionReference: string | any }>(
-        switchMap((data: any) => {
-          patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.getBySessionReference(data.sessionReference, ).pipe(
-            tapResponse({
-              next: (response: SurveyResponseDTO[] | any[]) => {
-                patchState(
-                  store, 
-                  {
-                    dataList: response, 
-                    loading: false, 
-                    success: true, 
-                    messages: ['Success!!'],
-                    error: false,
-                  }
-                );
-              },
-              error: (error: any) => {
-                patchState(
-                  store, { 
-                    status: (error?.status || 0), 
-                    loading: false, 
-                    success: false,
-                    error: true,
-                    messages: [error.message || 'An error occurred'], 
-                  }
-                );
-              },
-            }),
-          );
-        }),
-      ),
-      getBySessionReferencePaged: rxMethod<{sessionReference: string | any , pageNumber: number | any , pageSize: number | any }>(
-        switchMap((data: any) => {
-          patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.getBySessionReferencePaged(data.sessionReference, data.pageNumber, data.pageSize, ).pipe(
-            tapResponse({
-              next: (response: Page<SurveyResponseDTO> | any) => {
+              next: (response: Page<CommMessageDTO> | any) => {
                 patchState(
                   store, 
                   {
@@ -260,7 +132,7 @@ export const SurveyResponseApiStore = signalStore(
       remove: rxMethod<{id: string | any }>(
         switchMap((data: any) => {
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.remove(data.id, ).pipe(
+          return commMessageApi.remove(data.id, ).pipe(
             tapResponse({
               next: (response: boolean | any) => {
                 patchState(
@@ -289,12 +161,12 @@ export const SurveyResponseApiStore = signalStore(
           );
         }),
       ),
-      save: rxMethod<{response: SurveyResponseDTO | any }>(
+      save: rxMethod<{message: CommMessageDTO | any }>(
         switchMap((data: any) => {
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.save(data.response, ).pipe(
+          return commMessageApi.save(data.message, ).pipe(
             tapResponse({
-              next: (response: SurveyResponseDTO | any) => {
+              next: (response: CommMessageDTO | any) => {
                 patchState(
                   store, 
                   {
@@ -324,9 +196,41 @@ export const SurveyResponseApiStore = signalStore(
       search: rxMethod<{criteria: string | any }>(
         switchMap((data: any) => {
           patchState(store, { loading: true, loaderMessage: 'Loading ...' });
-          return surveyResponseApi.search(data.criteria, ).pipe(
+          return commMessageApi.search(data.criteria, ).pipe(
             tapResponse({
-              next: (response: SurveyResponseDTO[] | any[]) => {
+              next: (response: CommMessageDTO[] | any[]) => {
+                patchState(
+                  store, 
+                  {
+                    dataList: response, 
+                    loading: false, 
+                    success: true, 
+                    messages: ['Success!!'],
+                    error: false,
+                  }
+                );
+              },
+              error: (error: any) => {
+                patchState(
+                  store, { 
+                    status: (error?.status || 0), 
+                    loading: false, 
+                    success: false,
+                    error: true,
+                    messages: [error.message || 'An error occurred'], 
+                  }
+                );
+              },
+            }),
+          );
+        }),
+      ),
+      sendMessage: rxMethod<{messages: CommMessageDTO | any }>(
+        switchMap((data: any) => {
+          patchState(store, { loading: true, loaderMessage: 'Loading ...' });
+          return commMessageApi.sendMessage(data.messages, ).pipe(
+            tapResponse({
+              next: (response: CommMessageDTO[] | any[]) => {
                 patchState(
                   store, 
                   {

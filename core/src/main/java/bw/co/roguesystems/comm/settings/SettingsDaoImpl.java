@@ -6,7 +6,6 @@
  */
 package bw.co.roguesystems.comm.settings;
 
-import bw.co.roguesystems.comm.email.EmailMessageRepository;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Repository;
@@ -20,12 +19,10 @@ public class SettingsDaoImpl
 {
     
     public SettingsDaoImpl(
-        EmailMessageRepository emailMessageRepository,
         SettingsRepository settingsRepository
     ) {
 
         super(
-            emailMessageRepository,
             settingsRepository
         );
     }

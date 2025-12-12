@@ -6,10 +6,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>bw.co.roguesystems.comm</groupId>
-        <artifactId>rogue-comm</artifactId>
+        <artifactId>roguecomm</artifactId>
         <version>0.0.1</version>
     </parent>
-    <artifactId>rogue-comm-mda</artifactId>
+    <artifactId>roguecomm-mda</artifactId>
     <packaging>pom</packaging>
     <name>Rogue Communication Module MDA</name>
     <dependencies>
@@ -113,7 +113,7 @@
         </plugins>
     </build>
     <properties>
-        <model.uri>file:${project.basedir}/src/main/uml/rogue-comm.uml</model.uri>
+        <model.uri>file:${project.basedir}/src/main/uml/roguecomm.uml</model.uri>
         <javaVersion>${java.version}</javaVersion>
         <filter></filter>
         <validation>true</validation>

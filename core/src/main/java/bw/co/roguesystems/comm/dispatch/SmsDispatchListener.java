@@ -4,6 +4,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import bw.co.roguesystems.comm.message.CommMessageDTO;
 import bw.co.roguesystems.comm.properties.RabbitProperties;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,10 +20,10 @@ public class SmsDispatchListener {
         this.rabbitProperties = rabbitProperties;
     }
 
-    // @RabbitListener(queues = {"q.sms-dispatch"})
-    // public void onCommunication(MesssageDTO smsMessage) {
-    //     log.info("SMS communication message received: {}", smsMessage);
+    @RabbitListener(queues = {"${app.rabbitmq.smsDispatchQueue}"})
+    public void onCommunication(CommMessageDTO smsMessage) {
+        log.info("SMS communication message received: {}", smsMessage);
 
-    //     rabbitTemplate.convertAndSend("x.post-sms-dispatch", "", smsMessage);
-    // }
+        rabbitTemplate.convertAndSend("x.post-sms-dispatch", "", smsMessage);
+    }
 }

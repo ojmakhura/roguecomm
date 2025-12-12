@@ -4,6 +4,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import bw.co.roguesystems.comm.message.CommMessageDTO;
 import bw.co.roguesystems.comm.properties.RabbitProperties;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,10 +20,10 @@ public class WhatsappDispatchListener {
         this.rabbitProperties = rabbitProperties;
     }
 
-    // @RabbitListener(queues = {"q.whatsapp-dispatch"})
-    // public void onCommunication(MesssageDTO whatsappMessage) {
-    //     log.info("WhatsApp communication message received: {}", whatsappMessage);
+    @RabbitListener(queues = {"${app.rabbitmq.whatsappDispatchQueue}"})
+    public void onCommunication(CommMessageDTO whatsappMessage) {
+        log.info("WhatsApp communication message received: {}", whatsappMessage);
 
-    //     rabbitTemplate.convertAndSend("x.post-whatsapp-dispatch", "", whatsappMessage);
-    // }
+        rabbitTemplate.convertAndSend("x.post-whatsapp-dispatch", "", whatsappMessage);
+    }
 }

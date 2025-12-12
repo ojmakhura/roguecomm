@@ -4,6 +4,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import bw.co.roguesystems.comm.message.CommMessageDTO;
 import bw.co.roguesystems.comm.properties.RabbitProperties;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,17 +23,17 @@ public class EmailDispatchListener {
         this.rabbitProperties = rabbitProperties;
     }
 
-    // @RabbitListener(queues = {"q.email-dispatch"})
-    // public void onCommunication(MesssageDTO emailMessage)  {
-    //     log.info("Communication message Received: {}", emailMessage);
+    @RabbitListener(queues = {"${app.rabbitmq.emailDispatchQueue}"})
+    public void onCommunication(CommMessageDTO emailMessage)  {
+        log.info("Communication message Received: {}", emailMessage);
 
-    //     rabbitTemplate.convertAndSend("x.post-email-dispatch","", emailMessage);
-    // }
+        rabbitTemplate.convertAndSend("x.post-email-dispatch","", emailMessage);
+    }
 
-    // private void executeCommunication(MesssageDTO emailMessage) {
-    //     log.info("Executing Communication Event: {}", emailMessage);
+    private void executeCommunication(CommMessageDTO emailMessage) {
+        log.info("Executing Communication Event: {}", emailMessage);
 
-    //     throw new RuntimeException("Communication Failed");
+        throw new RuntimeException("Communication Failed");
 
-    // }
+    }
 }

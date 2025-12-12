@@ -6,7 +6,7 @@ import { SurveysComponent } from '@views/survey/surveys';
 
 import { AuthenticationGuard } from '@app/auth/authentication.guard';
 
-import { OrganisationControllerImpl } from '@controllers/survey/organisation-controller-impl';
+import { SurveyControllerImpl } from '@controllers/survey/survey-controller-impl';
 
 export const routes: Routes = [
   { 
@@ -15,7 +15,7 @@ export const routes: Routes = [
       canActivate: [AuthenticationGuard],
       data: { title: 'Surveys' },
       providers: [
-        OrganisationControllerImpl,
+        SurveyControllerImpl,
       ] 
   },
 ];

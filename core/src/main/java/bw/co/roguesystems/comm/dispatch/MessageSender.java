@@ -1,14 +1,23 @@
 package bw.co.roguesystems.comm.dispatch;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import bw.co.roguesystems.comm.MessageDispatchStatus;
-import bw.co.roguesystems.comm.email.EmailMessageDTO;
-import bw.co.roguesystems.comm.email.EmailMessageService;
-import bw.co.roguesystems.comm.simple.SimpleMessageDTO;
+import bw.co.roguesystems.comm.message.CommMessage;
+import bw.co.roguesystems.comm.message.CommMessageDTO;
+import bw.co.roguesystems.comm.message.CommMessageDao;
+import bw.co.roguesystems.comm.message.CommMessageRepository;
+import bw.co.roguesystems.comm.message.CommMessageService;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,43 +26,46 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MessageSender {
     
-    private final EmailMessageService emailMessageService;
+    private final CommMessageService messageService;
+    private final EmailSender emailSender;
+    private final WhatsappSender whatsappSender;
+    private final SmsSender smsSender;
 
-
-    @RabbitListener(queues = "q.email-queue")
-    public void readEmailQueue(Collection<EmailMessageDTO> emailMessages) {
+    @RabbitListener(queues = "${app.rabbitmq.emailQueue}")
+    public void readEmailQueue(Collection<CommMessageDTO> emailMessages) {
 
         log.info("Getting {} from email queue.", emailMessages.size());
         
-        for (EmailMessageDTO emailMessage : emailMessages) {
+        for (CommMessageDTO emailMessage : emailMessages) {
             
             if(emailMessage.getId() != null) {
-                emailMessage = emailMessageService.findById(emailMessage.getId());
+                emailMessage = messageService.findById(emailMessage.getId());
             }
             
-            emailMessage = emailMessageService.save(emailMessage);
+            emailMessage = messageService.save(emailMessage);
 
             if(emailMessage.getSendNow()) {
                 try {
                     // Send email directly using EmailService instead of RabbitMQ
-                    // emailService.sendEmail(emailMessage);
+                    emailSender.sendEmail(emailMessage);
                     log.info("Email sent successfully for message ID: {}", emailMessage.getId());
                 } catch (Exception e) {
+                    e.printStackTrace();
                     log.error("Failed to send email for message ID {}: {}", emailMessage.getId(), e.getMessage());
                     // The EmailService will handle setting the status to FAILED
                 }
             }
-
         }
-
     }
 
-    @RabbitListener(queues = "q.sms-queue")
-    public void readSmsQueue(Collection<SimpleMessageDTO> smsMessages) {
+    
+
+    @RabbitListener(queues = "${app.rabbitmq.smsQueue}")
+    public void readSmsQueue(Collection<CommMessageDTO> smsMessages) {
 
         log.info("Getting {} from SMS queue.", smsMessages.size());
         
-        for (SimpleMessageDTO smsMessage : smsMessages) {
+        for (CommMessageDTO smsMessage : smsMessages) {
             
             if(smsMessage.getId() != null) {
                 // smsMessage = findById(smsMessage.getId());
@@ -65,24 +77,23 @@ public class MessageSender {
                 try {
                     // TODO: Implement SMS sending logic
                     log.info("SMS message queued for message ID: {}", smsMessage.getId());
+                    smsSender.sendSms(smsMessage);
                     // For now, just mark as sent
                     // updateMessageStatus(smsMessage.getId(), MessageDispatchStatus.SENT);
                 } catch (Exception e) {
                     log.error("Failed to process SMS for message ID {}: {}", smsMessage.getId(), e.getMessage());
-                    // updateMessageStatus(smsMessage.getId(), MesssageStatus.FAILED);
+                    // updateMessageStatus(smsMessage.getId(), MessageDispatchStatus.FAILED);
                 }
             }
-
         }
-
     }
 
-    @RabbitListener(queues = "q.whatsapp-queue")
-    public void readWhatsAppQueue(Collection<SimpleMessageDTO> whatsappMessages) {
+    @RabbitListener(queues = "${app.rabbitmq.whatsappQueue}")
+    public void readWhatsAppQueue(Collection<CommMessageDTO> whatsappMessages) {
 
         log.info("Getting {} from WhatsApp queue.", whatsappMessages.size());
         
-        for (SimpleMessageDTO whatsappMessage : whatsappMessages) {
+        for (CommMessageDTO whatsappMessage : whatsappMessages) {
             
             if(whatsappMessage.getId() != null) {
                 // whatsappMessage = findById(whatsappMessage.getId());
@@ -93,6 +104,7 @@ public class MessageSender {
             if(whatsappMessage.getSendNow()) {
                 try {
                     // Send WhatsApp message using WhatsappService
+                    whatsappSender.sendWhatsapp(whatsappMessage);
                     // whatsappService.sendWhatsAppMessage(whatsappMessage);
                     log.info("WhatsApp message sent successfully for message ID: {}", whatsappMessage.getId());
                 } catch (Exception e) {

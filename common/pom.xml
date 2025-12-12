@@ -4,16 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>bw.co.roguesystems.comm</groupId>
-        <artifactId>rogue-comm</artifactId>
+        <artifactId>roguecomm</artifactId>
         <version>0.0.1</version>
     </parent>
-    <artifactId>rogue-comm-common</artifactId>
+    <artifactId>roguecomm-common</artifactId>
     <packaging>jar</packaging>
     <name>Rogue Communication Module Common</name>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>rogue-comm-mda</artifactId>
+            <artifactId>roguecomm-mda</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
             <scope>provided</scope>

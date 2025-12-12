@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "rogue-comm": {
+    "roguecomm": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/rogue-comm",
+            "outputPath": "dist/roguecomm",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [],
@@ -85,10 +85,10 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "rogue-comm:build:production"
+              "buildTarget": "roguecomm:build:production"
             },
             "development": {
-              "buildTarget": "rogue-comm:build:development"
+              "buildTarget": "roguecomm:build:development"
             }
           },
           "defaultConfiguration": "development"
