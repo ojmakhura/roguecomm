@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import bw.co.roguesystems.comm.properties.RabbitProperties;
+import bw.co.roguesystems.comm.whatsapp.WhatsAppWebhookPayload;
 
 /**
  * @see bw.co.roguesystems.comm.message.CommMessageService
@@ -165,13 +166,11 @@ public class CommMessageServiceImpl
         }
 
         if (!whatsappMessages.isEmpty()) {
-            System.out.println("++++++++++++++++++++++++++> " + rabbitProperties.getWhatsappQueueExchange());
             rabbitTemplate.convertAndSend(rabbitProperties.getWhatsappQueueExchange(),
                     rabbitProperties.getWhatsappQueueRoutingKey(), whatsappMessages);
         }
 
         if (!smsMessages.isEmpty()) {
-            System.out.println("---------------------------------> " + rabbitProperties.getWhatsappQueueExchange());
             rabbitTemplate.convertAndSend(rabbitProperties.getSmsQueueExchange(),
                     rabbitProperties.getSmsQueueRoutingKey(), smsMessages);
         }
@@ -185,6 +184,13 @@ public class CommMessageServiceImpl
         }
 
         return messages;
+    }
+
+    @Override
+    protected Collection<CommMessageDTO> handleProcessWhatsappWebhookPayload(String user,
+            WhatsAppWebhookPayload payload) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'handleProcessWhatsappWebhookPayload'");
     }
 
 }

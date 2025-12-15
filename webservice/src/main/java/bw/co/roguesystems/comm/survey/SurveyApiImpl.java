@@ -11,6 +11,8 @@ import bw.co.roguesystems.comm.survey.question.QuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -162,5 +164,13 @@ public class SurveyApiImpl implements SurveyApi {
     protected QuestionService getQuestionService()
     {
         return this.questionService;
+    }
+
+
+
+    @Override
+    public ResponseEntity<SurveyDTO> launch(String id, Set<String> destinations) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'launch'");
     }
 }

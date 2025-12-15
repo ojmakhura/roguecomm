@@ -68,6 +68,8 @@ app:
     whatsappQueueRoutingKey: ${WHATSAPP_QUEUE_ROUTING_KEY:whatsapp-queue}
   whatsapp: 
     configString: ${WHATSAPP_CONFIG_STRING:}
+    verificationToken: ${WHATSAPP_VERIFICATION_TOKEN:}
+    app-secret: ${WHATSAPP_APP_SECRET:}
   security:
     permit: ${SECURITY_PERMIT:/**}
 logging:

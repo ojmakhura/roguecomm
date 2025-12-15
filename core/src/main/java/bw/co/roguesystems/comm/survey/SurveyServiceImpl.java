@@ -8,8 +8,12 @@
  */
 package bw.co.roguesystems.comm.survey;
 
+import bw.co.roguesystems.comm.message.CommMessageDTO;
 import bw.co.roguesystems.comm.survey.question.QuestionDTO;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -128,6 +132,30 @@ public class SurveyServiceImpl
     {
 
         Survey survey = this.surveyRepository.findByReference(reference);
+
+        return this.surveyDao.toSurveyDTO(survey);
+    }
+
+    @Override
+    protected SurveyDTO handleLaunch(String id, Set<String> destinations) throws Exception {
+
+        Survey survey = this.surveyRepository.getReferenceById(id);
+        String firstQuestion = survey.getQuestions().stream()
+            .sorted((q1, q2) -> Integer.compare(q1.getQuestionNo(), q2.getQuestionNo()))
+            .findFirst()
+            .orElseThrow(() -> new Exception("Survey has no questions"))
+            .getText();
+
+        Collection<CommMessageDTO> messages = destinations.stream().map(destination -> {
+            CommMessageDTO message = new CommMessageDTO();
+            message.setDestinations(List.of(destination));
+            message.setSource(survey.getSource());
+            message.setText(firstQuestion);
+
+            return message;
+        }).toList();
+
+        
 
         return this.surveyDao.toSurveyDTO(survey);
     }

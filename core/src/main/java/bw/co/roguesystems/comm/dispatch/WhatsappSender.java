@@ -11,8 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class WhatsappSender {
-    
-    
+        
     @Async("virtualThreadExecutor")
     public void sendWhatsapp(CommMessageDTO whatsappMessage) {
 
