@@ -2,21 +2,13 @@ package bw.co.roguesystems.comm.config;
 
 // import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import bw.co.roguesystems.comm.properties.RabbitProperties;
 import tools.jackson.databind.json.JsonMapper;
@@ -26,13 +18,10 @@ import tools.jackson.databind.json.JsonMapper;
 public class RabbitMQConfig {
     private final CachingConnectionFactory cachingConnectionFactory;
     private final RabbitProperties rabbitProperties;
-    private final ObjectMapper objectMapper;
 
-    public RabbitMQConfig(CachingConnectionFactory cachingConnectionFactory, RabbitProperties rabbitProperties,
-            ObjectMapper objectMapper) {
+    public RabbitMQConfig(CachingConnectionFactory cachingConnectionFactory, RabbitProperties rabbitProperties) {
         this.cachingConnectionFactory = cachingConnectionFactory;
         this.rabbitProperties = rabbitProperties;
-        this.objectMapper = objectMapper;
     }
 
     @Bean
@@ -63,6 +52,24 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue createFacebookPostExchangeQueue() {
+
+        return QueueBuilder.durable(rabbitProperties.getFacebookPostHandler())
+                .withArgument("x-dead-letter-exchange", "x.facebook-post-dispatch-failure")
+                .withArgument("x-dead-letter-routing-key", "fall-back")
+                .build();
+    }
+
+    @Bean
+    public Queue createFacebookMessageExchangeQueue() {
+
+        return QueueBuilder.durable(rabbitProperties.getFacebookMessageHandler())
+                .withArgument("x-dead-letter-exchange", "x.facebook-message-dispatch-failure")
+                .withArgument("x-dead-letter-routing-key", "fall-back")
+                .build();
+    }
+
+    @Bean
     public Declarables createPostDispatchSchema() {
         return new Declarables(
                 new FanoutExchange("x.post-email-dispatch"),
@@ -78,7 +85,17 @@ public class RabbitMQConfig {
                 new FanoutExchange("x.post-sms-dispatch"),
                 new Queue(rabbitProperties.getSmsDispatchQueue(), true),
                 new Binding(rabbitProperties.getSmsDispatchQueue(), Binding.DestinationType.QUEUE,
-                        "x.post-sms-dispatch", rabbitProperties.getSmsDispatchRoutingKey(), null));
+                        "x.post-sms-dispatch", rabbitProperties.getSmsDispatchRoutingKey(), null),
+
+                new FanoutExchange("x.post-facebook-post-dispatch"),
+                new Queue(rabbitProperties.getFacebookPostDispatchQueue(), true),
+                new Binding(rabbitProperties.getFacebookPostDispatchQueue(), Binding.DestinationType.QUEUE,
+                        "x.post-facebook-post-dispatch", rabbitProperties.getFacebookPostDispatchRoutingKey(), null),
+
+                new FanoutExchange("x.post-facebook-message-dispatch"),
+                new Queue(rabbitProperties.getFacebookMessageDispatchQueue(), true),
+                new Binding(rabbitProperties.getFacebookMessageDispatchQueue(), Binding.DestinationType.QUEUE,
+                        "x.post-facebook-message-dispatch", rabbitProperties.getFacebookMessageDispatchRoutingKey(), null));
     }
 
     @Bean
@@ -97,7 +114,17 @@ public class RabbitMQConfig {
                 new DirectExchange("x.sms-dispatch-failure"),
                 new Queue("q.fall-back-sms-dispatch"),
                 new Binding("q.fall-back-sms-dispatch", Binding.DestinationType.QUEUE, "x.sms-dispatch-failure",
-                        "sms-fall-back", null));
+                        "sms-fall-back", null),
+
+                new DirectExchange("x.facebook-post-dispatch-failure"),
+                new Queue("q.fall-back-facebook-post-dispatch"),
+                new Binding("q.fall-back-facebook-post-dispatch", Binding.DestinationType.QUEUE,
+                        "x.facebook-post-dispatch-failure", "facebook-post-fall-back", null),
+
+                new DirectExchange("x.facebook-message-dispatch-failure"),
+                new Queue("q.fall-back-facebook-message-dispatch"),
+                new Binding("q.fall-back-facebook-message-dispatch", Binding.DestinationType.QUEUE,
+                        "x.facebook-message-dispatch-failure", "facebook-message-fall-back", null));
     }
 
     @Bean
@@ -132,6 +159,18 @@ public class RabbitMQConfig {
                 .build();
     }
 
+    @Bean
+    public Queue createFacebookPostQueue() {
+        return QueueBuilder.durable(rabbitProperties.getFacebookPostQueue())
+                .build();
+    }
+
+    @Bean
+    public Queue createFacebookMessageQueue() {
+        return QueueBuilder.durable(rabbitProperties.getFacebookMessageQueue())
+                .build();
+    }
+
     /// Queue schema
     @Bean
     public Declarables createEmailQueueSchema() {
@@ -160,6 +199,24 @@ public class RabbitMQConfig {
                 smsQueueBinding());
     }
 
+    @Bean
+    public Declarables createFacebookPostQueueSchema() {
+
+        return new Declarables(
+                new DirectExchange(rabbitProperties.getFacebookPostQueueExchange()),
+                facebookPostQueue(),
+                facebookPostQueueBinding());
+    }
+
+    @Bean
+    public Declarables createFacebookMessageQueueSchema() {
+
+        return new Declarables(
+                new DirectExchange(rabbitProperties.getFacebookMessageQueueExchange()),
+                facebookMessageQueue(),
+                facebookMessageQueueBinding());
+    }
+
     /// Queue definitions
     @Bean
     Queue emailQueue() {
@@ -174,6 +231,16 @@ public class RabbitMQConfig {
     @Bean
     Queue smsQueue() {
         return new Queue(rabbitProperties.getSmsQueue(), true);
+    }
+
+    @Bean
+    Queue facebookPostQueue() {
+        return new Queue(rabbitProperties.getFacebookPostQueue(), true);
+    }
+
+    @Bean
+    Queue facebookMessageQueue() {
+        return new Queue(rabbitProperties.getFacebookMessageQueue(), true);
     }
 
     /// Queue exchanges
@@ -192,6 +259,16 @@ public class RabbitMQConfig {
         return new DirectExchange(rabbitProperties.getSmsQueueExchange());
     }
 
+    @Bean
+    DirectExchange facebookPostQueueExchange() {
+        return new DirectExchange(rabbitProperties.getFacebookPostQueueExchange());
+    }
+
+    @Bean
+    DirectExchange facebookMessageQueueExchange() {
+        return new DirectExchange(rabbitProperties.getFacebookMessageQueueExchange());
+    }
+
     /// Queue bindings
     @Bean
     Binding emailQueueBinding() {
@@ -208,6 +285,18 @@ public class RabbitMQConfig {
     @Bean
     Binding smsQueueBinding() {
         return BindingBuilder.bind(smsQueue()).to(smsQueueExchange()).with(rabbitProperties.getSmsQueueRoutingKey());
+    }
+
+    @Bean
+    Binding facebookPostQueueBinding() {
+        return BindingBuilder.bind(facebookPostQueue()).to(facebookPostQueueExchange())
+                .with(rabbitProperties.getFacebookPostQueueRoutingKey());
+    }
+
+    @Bean
+    Binding facebookMessageQueueBinding() {
+        return BindingBuilder.bind(facebookMessageQueue()).to(facebookMessageQueueExchange())
+                .with(rabbitProperties.getFacebookMessageQueueRoutingKey());
     }
 
     @Bean

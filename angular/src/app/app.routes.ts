@@ -6,35 +6,30 @@
  * MODEL CLASS:  $validationName
  */
 import { Routes } from '@angular/router';
-import { Shell } from '@app/shell/shell';
-import { UseCaseScope } from './utils/use-case-scope';
+import { Shell } from './shell';
+// import { LoginComponent } from './auth/login.component';
+import { surveysRoutes } from '@app/views/survey/surveys.routes';
+import { settingsRoutes } from '@app/views/settings/settings.routes';
 
 export const routes: Routes = [
+  // Uncomment the following lines to enable login route
+  //{
+  //  path: 'login',
+  //  component: LoginComponent,
+  //},
   Shell.childRoutes([
     {
       path: '',
       data: { title: 'Home' },
-      loadComponent: () => import('./views/home/home').then((c) => c.Home),
+      loadComponent: () => import('./views/home/home').then((m) => m.Home),
     },
     {
       path: 'about',
       data: { title: 'About' },
-      loadComponent: () => import('./views/about/about').then((c) => c.About),
+      loadComponent: () => import('./views/about/about').then((m) => m.About),
     },
-    {
-      path: 'surveys', 
-      loadChildren: () => import('@views/survey/surveys.routes').then((m) => m.routes),
-      providers: [
-        UseCaseScope
-      ]
-    },
-    {
-      path: 'settings', 
-      loadChildren: () => import('@views/settings/settings.routes').then((m) => m.routes),
-      providers: [
-        UseCaseScope
-      ]
-    },
+    ...surveysRoutes,
+    ...settingsRoutes,
   ]),
   // Fallback when no prior route is matched
   { 

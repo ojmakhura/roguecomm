@@ -9,8 +9,13 @@ server:
   http2:
     enabled: true
 spring:
+  application:
+    name: roguecomm-webservice
   thymeleaf:
     cache: false
+  threads:
+    virtual:
+      enabled: true
   mvc:
     format:
       date: iso
@@ -40,6 +45,42 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${AUTH_URL:http://localhost:8970}/realms/${REALM:comm}
+management:
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      access: READ_ONLY
+    prometheus:
+      access: READ_ONLY
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health,info,metrics,prometheus
+        exclude: env,shutdown,heapdump
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      version: ${spring.application.version}
+  tracing:
+    sampling:
+      probability: 1.0  # 100% for development
+  otlp:
+    metrics:
+      export:
+        url: ${OTLP_URL:http://localhost:4318}/v1/metrics
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTLP_URL:http://localhost:4318}/v1/traces
+    logging:
+      export:
+        otlp:
+          endpoint: ${OTLP_URL:http://localhost:4318}/v1/logs
+rate-limiting:
+  tokens: ${RATE_LIMIT:2000}
 app:
   rabbitmq:
     # Email queues
@@ -66,12 +107,31 @@ app:
     whatsappQueueExchange: ${WHATSAPP_QUEUE_EXCHANGE:x.whatsapp-queue}
     whatsappQueue: ${WHATSAPP_QUEUE:q.whatsapp-queue}
     whatsappQueueRoutingKey: ${WHATSAPP_QUEUE_ROUTING_KEY:whatsapp-queue}
+    # Facebook Post queues
+    facebookPostHandler: ${FACEBOOK_POST_HANDLER:q.facebook-post-handler}
+    facebookPostDispatchExchange: ${FACEBOOK_POST_DISPATCH_EXCHANGE:x.facebook-post-dispatch}
+    facebookPostDispatchQueue: ${FACEBOOK_POST_DISPATCH_QUEUE:q.facebook-post-dispatch}
+    facebookPostDispatchRoutingKey: ${FACEBOOK_POST_DISPATCH_ROUTING_KEY:facebook-post-dispatch}
+    facebookPostQueueExchange: ${FACEBOOK_POST_QUEUE_EXCHANGE:x.facebook-post-queue}
+    facebookPostQueue: ${FACEBOOK_POST_QUEUE:q.facebook-post-queue}
+    facebookPostQueueRoutingKey: ${FACEBOOK_POST_QUEUE_ROUTING_KEY:facebook-post-queue}
+    # Facebook Message queues
+    facebookMessageHandler: ${FACEBOOK_MESSAGE_HANDLER:q.facebook-message-handler}
+    facebookMessageDispatchExchange: ${FACEBOOK_MESSAGE_DISPATCH_EXCHANGE:x.facebook-message-dispatch}
+    facebookMessageDispatchQueue: ${FACEBOOK_MESSAGE_DISPATCH_QUEUE:q.facebook-message-dispatch}
+    facebookMessageDispatchRoutingKey: ${FACEBOOK_MESSAGE_DISPATCH_ROUTING_KEY:facebook-message-dispatch}
+    facebookMessageQueueExchange: ${FACEBOOK_MESSAGE_QUEUE_EXCHANGE:x.facebook-message-queue}
+    facebookMessageQueue: ${FACEBOOK_MESSAGE_QUEUE:q.facebook-message-queue}
+    facebookMessageQueueRoutingKey: ${FACEBOOK_MESSAGE_QUEUE_ROUTING_KEY:facebook-message-queue}
   whatsapp: 
     configString: ${WHATSAPP_CONFIG_STRING:}
     verificationToken: ${WHATSAPP_VERIFICATION_TOKEN:}
     app-secret: ${WHATSAPP_APP_SECRET:}
+  facebook:
+    configString: ${FACEBOOK_CONFIG_STRING:}
   security:
     permit: ${SECURITY_PERMIT:/**}
 logging:
   level:
     org.springframework.amqp: DEBUG
+    root: ${LOG_LEVEL:-INFO}

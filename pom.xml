@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.2</version>
         <relativePath/>
     </parent>
     <groupId>bw.co.roguesystems.comm</groupId>
@@ -231,21 +231,21 @@
                 <version>2.6.0</version>
             </dependency>
             <dependency>
-                <groupId>org.springdoc</groupId>
+                <groupId>org.springdoc</groupId> 
                 <artifactId>springdoc-openapi-starter-common</artifactId>
                 <version>2.6.0</version>
             </dependency>
-            <!-- <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web-services</artifactId>
-                <version>${spring-boot.version}</version>
-            </dependency> -->
-            <!-- Uncomment if using spring security -->
-            <!--<dependency>
-                <groupId>org.thymeleaf.extras</groupId>
-                <artifactId>thymeleaf-extras-springsecurity6</artifactId>
-                <version>3.1.2.RELEASE</version>
-            </dependency>-->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>1.6.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>1.6.3</version>
+                <scope>provided</scope>
+            </dependency>
             <!-- For Working with Json Web Tokens (JWT) -->
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
@@ -429,7 +429,7 @@
         <dataSource.name>jdbc/${application.id}</dataSource.name>
         <dataSource>java:comp/env/${dataSource.name}</dataSource>
         <!-- Set andromda.xml hibernateVersion=7, sessionFactory and localTransactionManager to hibernate4.-->
-        <hibernate.version>7.1.10.Final</hibernate.version>
+        <!-- <hibernate.version>7.1.10.Final</hibernate.version> -->
         <!-- v 9.x only supports JDK7 and you cannot configure jetty.port from maven.-->
         <!-- v5 migration needed -->
         <!-- <spring.version>5.3.2</spring.version> -->

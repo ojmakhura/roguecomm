@@ -33,6 +33,22 @@ public class RabbitProperties {
     private final String whatsappQueueExchange;
     private final String whatsappQueue;
     private final String whatsappQueueRoutingKey;
+    // Facebook Post properties
+    private final String facebookPostHandler;
+    private final String facebookPostDispatchExchange;
+    private final String facebookPostDispatchQueue;
+    private final String facebookPostDispatchRoutingKey;
+    private final String facebookPostQueueExchange;
+    private final String facebookPostQueue;
+    private final String facebookPostQueueRoutingKey;
+    // Facebook Message properties
+    private final String facebookMessageHandler;
+    private final String facebookMessageDispatchExchange;
+    private final String facebookMessageDispatchQueue;
+    private final String facebookMessageDispatchRoutingKey;
+    private final String facebookMessageQueueExchange;
+    private final String facebookMessageQueue;
+    private final String facebookMessageQueueRoutingKey;
 
     public RabbitProperties(String host, int port, String username, String password,
             String emailHandler, String emailDispatchExchange,
@@ -43,7 +59,13 @@ public class RabbitProperties {
             String smsQueueExchange, String smsQueue, String smsQueueRoutingKey,
             String whatsappHandler, String whatsappDispatchExchange,
             String whatsappDispatchQueue, String whatsappDispatchRoutingKey,
-            String whatsappQueueExchange, String whatsappQueue, String whatsappQueueRoutingKey) {
+            String whatsappQueueExchange, String whatsappQueue, String whatsappQueueRoutingKey,
+            String facebookPostHandler, String facebookPostDispatchExchange,
+            String facebookPostDispatchQueue, String facebookPostDispatchRoutingKey,
+            String facebookPostQueueExchange, String facebookPostQueue, String facebookPostQueueRoutingKey,
+            String facebookMessageHandler, String facebookMessageDispatchExchange,
+            String facebookMessageDispatchQueue, String facebookMessageDispatchRoutingKey,
+            String facebookMessageQueueExchange, String facebookMessageQueue, String facebookMessageQueueRoutingKey) {
         this.host = host;
         this.port = port;
         this.username = username;
@@ -69,6 +91,20 @@ public class RabbitProperties {
         this.whatsappQueueExchange = whatsappQueueExchange;
         this.whatsappQueue = whatsappQueue;
         this.whatsappQueueRoutingKey = whatsappQueueRoutingKey;
+        this.facebookPostHandler = facebookPostHandler;
+        this.facebookPostDispatchExchange = facebookPostDispatchExchange;
+        this.facebookPostDispatchQueue = facebookPostDispatchQueue;
+        this.facebookPostDispatchRoutingKey = facebookPostDispatchRoutingKey;
+        this.facebookPostQueueExchange = facebookPostQueueExchange;
+        this.facebookPostQueue = facebookPostQueue;
+        this.facebookPostQueueRoutingKey = facebookPostQueueRoutingKey;
+        this.facebookMessageHandler = facebookMessageHandler;
+        this.facebookMessageDispatchExchange = facebookMessageDispatchExchange;
+        this.facebookMessageDispatchQueue = facebookMessageDispatchQueue;
+        this.facebookMessageDispatchRoutingKey = facebookMessageDispatchRoutingKey;
+        this.facebookMessageQueueExchange = facebookMessageQueueExchange;
+        this.facebookMessageQueue = facebookMessageQueue;
+        this.facebookMessageQueueRoutingKey = facebookMessageQueueRoutingKey;
     }
 
     public String getHost() {
@@ -171,6 +207,62 @@ public class RabbitProperties {
         return whatsappQueueRoutingKey;
     }
 
+    public String getFacebookPostHandler() {
+        return facebookPostHandler;
+    }
+
+    public String getFacebookPostDispatchExchange() {
+        return facebookPostDispatchExchange;
+    }
+
+    public String getFacebookPostDispatchQueue() {
+        return facebookPostDispatchQueue;
+    }
+
+    public String getFacebookPostDispatchRoutingKey() {
+        return facebookPostDispatchRoutingKey;
+    }
+
+    public String getFacebookPostQueueExchange() {
+        return facebookPostQueueExchange;
+    }
+
+    public String getFacebookPostQueue() {
+        return facebookPostQueue;
+    }
+
+    public String getFacebookPostQueueRoutingKey() {
+        return facebookPostQueueRoutingKey;
+    }
+
+    public String getFacebookMessageHandler() {
+        return facebookMessageHandler;
+    }
+
+    public String getFacebookMessageDispatchExchange() {
+        return facebookMessageDispatchExchange;
+    }
+
+    public String getFacebookMessageDispatchQueue() {
+        return facebookMessageDispatchQueue;
+    }
+
+    public String getFacebookMessageDispatchRoutingKey() {
+        return facebookMessageDispatchRoutingKey;
+    }
+
+    public String getFacebookMessageQueueExchange() {
+        return facebookMessageQueueExchange;
+    }
+
+    public String getFacebookMessageQueue() {
+        return facebookMessageQueue;
+    }
+
+    public String getFacebookMessageQueueRoutingKey() {
+        return facebookMessageQueueRoutingKey;
+    }
+
     @Override
     public String toString() {
         return "RabbitProperties [host=" + host + ", port=" + port + ", username=" + username + ", password=" + password
@@ -185,7 +277,15 @@ public class RabbitProperties {
                 + ", whatsappHandler=" + whatsappHandler + ", whatsappDispatchExchange=" + whatsappDispatchExchange
                 + ", whatsappDispatchQueue=" + whatsappDispatchQueue + ", whatsappDispatchRoutingKey=" + whatsappDispatchRoutingKey
                 + ", whatsappQueueExchange=" + whatsappQueueExchange + ", whatsappQueue=" + whatsappQueue
-                + ", whatsappQueueRoutingKey=" + whatsappQueueRoutingKey + "]";
+                + ", whatsappQueueRoutingKey=" + whatsappQueueRoutingKey
+                + ", facebookPostHandler=" + facebookPostHandler + ", facebookPostDispatchExchange=" + facebookPostDispatchExchange
+                + ", facebookPostDispatchQueue=" + facebookPostDispatchQueue + ", facebookPostDispatchRoutingKey=" + facebookPostDispatchRoutingKey
+                + ", facebookPostQueueExchange=" + facebookPostQueueExchange + ", facebookPostQueue=" + facebookPostQueue
+                + ", facebookPostQueueRoutingKey=" + facebookPostQueueRoutingKey
+                + ", facebookMessageHandler=" + facebookMessageHandler + ", facebookMessageDispatchExchange=" + facebookMessageDispatchExchange
+                + ", facebookMessageDispatchQueue=" + facebookMessageDispatchQueue + ", facebookMessageDispatchRoutingKey=" + facebookMessageDispatchRoutingKey
+                + ", facebookMessageQueueExchange=" + facebookMessageQueueExchange + ", facebookMessageQueue=" + facebookMessageQueue
+                + ", facebookMessageQueueRoutingKey=" + facebookMessageQueueRoutingKey + "]";
     }
 
 }
