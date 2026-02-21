@@ -1,5 +1,7 @@
 package bw.co.roguesystems.comm.config;
 
+import java.util.concurrent.ExecutorService;
+
 // import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
@@ -18,10 +20,12 @@ import tools.jackson.databind.json.JsonMapper;
 public class RabbitMQConfig {
     private final CachingConnectionFactory cachingConnectionFactory;
     private final RabbitProperties rabbitProperties;
+    private final ExecutorService virtualThreadExecutor;
 
-    public RabbitMQConfig(CachingConnectionFactory cachingConnectionFactory, RabbitProperties rabbitProperties) {
+    public RabbitMQConfig(CachingConnectionFactory cachingConnectionFactory, RabbitProperties rabbitProperties, ExecutorService virtualThreadExecutor) {
         this.cachingConnectionFactory = cachingConnectionFactory;
         this.rabbitProperties = rabbitProperties;
+        this.virtualThreadExecutor = virtualThreadExecutor;
     }
 
     @Bean
@@ -136,6 +140,9 @@ public class RabbitMQConfig {
         factory.setDefaultRequeueRejected(false);
         factory.setMessageConverter(converter); // important!
         // factory.setBatchListener(true);
+        factory.setTaskExecutor(virtualThreadExecutor);
+        factory.setPrefetchCount(1);
+        
         return factory;
     }
 
